@@ -1,6 +1,6 @@
 # NANDGAME
 
-Nandgameの内容をCPPで再現する  
+Nandgameの内容をC++で再現する  
 https://nandgame.com/
 
 ## ルール
