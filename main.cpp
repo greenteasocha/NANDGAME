@@ -33,12 +33,74 @@ class NAND{
     }
 };
 
+class INV{
+    public: 
+        SOCKET_BOOL in_socket1;
+        SOCKET_BOOL out;
+    
+    INV(SOCKET_BOOL in_socket1) {
+        this->out = NAND(in_socket1, in_socket1).get(); 
+    }
+
+    SOCKET_BOOL get() {
+        return this->out;
+    }
+};
+
+class AND{
+    public: 
+        SOCKET_BOOL in_socket1;
+        SOCKET_BOOL in_socket2;
+        SOCKET_BOOL out;
+    
+    AND(SOCKET_BOOL in_socket1, SOCKET_BOOL in_socket2) {
+        this->out = INV(NAND(in_socket1, in_socket2).get()).get(); 
+    }
+
+    SOCKET_BOOL get() {
+        return this->out;
+    }
+};
+
+class OR{
+    public: 
+        SOCKET_BOOL in_socket1;
+        SOCKET_BOOL in_socket2;
+        SOCKET_BOOL out;
+    
+    OR(SOCKET_BOOL in_socket1, SOCKET_BOOL in_socket2) {
+        this->out = NAND(INV(in_socket1).get(), INV(in_socket2).get()).get(); 
+    }
+
+    SOCKET_BOOL get() {
+        return this->out;
+    }
+};
+
+class XOR{
+    public: 
+        SOCKET_BOOL in_socket1;
+        SOCKET_BOOL in_socket2;
+        SOCKET_BOOL out;
+    
+    XOR(SOCKET_BOOL in_socket1, SOCKET_BOOL in_socket2) {
+        this->out = AND(
+            NAND(in_socket1, in_socket2).get(),
+            OR(in_socket1, in_socket2).get()
+            ).get(); 
+    }
+
+    SOCKET_BOOL get() {
+        return this->out;
+    }
+};
+
 int main() {
     SOCKET_BOOL a;
-    SOCKET_BOOL b;
+    SOCKET_BOOL b;  
     a.set(1);
-    b.set(0);
-    SOCKET_BOOL c(NAND(a, b).get());
+    b.set(1);
+    SOCKET_BOOL c(XOR(a, b).get());
     cout << c.val << endl;
     return 0;
 }
